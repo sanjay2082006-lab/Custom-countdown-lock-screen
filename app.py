@@ -47,6 +47,22 @@ for tag, default_task in default_milestones:
     milestones.append((tag, m_date.strftime("%b %d"), task, checked))
 
 # --- 4. LOCK SCREEN IMAGE GENERATOR (9:16 - 1080x1920) ---
+def get_font(size, bold=False):
+    candidates = [
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf" if bold else "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+        "DejaVuSans-Bold.ttf" if bold else "DejaVuSans.ttf",
+        "arialbd.ttf" if bold else "arial.ttf",
+    ]
+    for path in candidates:
+        try:
+            return ImageFont.truetype(path, size=size)
+        except OSError:
+            continue
+    try:
+        return ImageFont.load_default(size=size)
+    except TypeError:
+        return ImageFont.load_default()
+
 def create_lockscreen(goal, days, target_dt, items, selected_theme):
     W, H = 1080, 1920
     themes = {
